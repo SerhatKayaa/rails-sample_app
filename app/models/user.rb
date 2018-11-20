@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :microposts, dependent: :destroy
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
@@ -60,6 +61,10 @@ class User < ApplicationRecord
   # Sends activation email.
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
+  end
+
+  def feed
+    Micropost.where("user_id = ?", id)
   end
 
   private
